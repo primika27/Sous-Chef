@@ -11,11 +11,11 @@ class ResourceType(str, Enum):
 class TaskNode(BaseModel):
     id: str = Field(description="Unique short id, e.g. task_1")
     description: str
-    duration_minutes: int
-    required_resources: List[ResourceType] = Field(
+    duration: int # in minutes
+    resources: List[ResourceType] = Field(
         description="['hands', 'burner'] for active sautéing, ['burner'] for passive boiling"
     )
-    depends_on: List[str] = Field(
+    dependencies: List[str] = Field(
         default_factory=list, 
         description="IDs of tasks that MUST finish before this task starts"
     )
@@ -33,7 +33,7 @@ class RecipeGraph(BaseModel):
 class ScheduledTask(BaseModel):
     task_id: str
     description: str
-    start_minute: int
-    end_minute: int
+    start_time: int # in minutes from the start of the recipe
+    end_time: int # in minutes from the start of the recipe
     assigned_resources: List[ResourceType]
     review_alert: Optional[str] = None
